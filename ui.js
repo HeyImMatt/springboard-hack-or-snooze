@@ -77,16 +77,14 @@ $(async function() {
 
   //Favorite stories handler
   async function favoriteStory(evt) {
-    console.dir(evt.target)
     let storyId = evt.target.parentElement.parentElement.id;
     if (evt.target.classList.contains('far')) {
-      evt.target.classList.remove('far');
-      evt.target.classList.add('fa');
+      currentUser.favoriteStory('add', storyId);
+      evt.target.className = 'fa-star fa';
     } else {
-      evt.target.classList.remove('fa');
-      evt.target.classList.add('far');
+      currentUser.favoriteStory('remove', storyId);
+      evt.target.className = 'fa-star far';
     }
-    console.log(storyId)
   }
 
   /**

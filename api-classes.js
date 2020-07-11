@@ -153,6 +153,16 @@ class User {
     existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
     return existingUser;
   }
+
+  // add stories on favorites list
+  async favoriteStory(action, storyId) {
+    const {username, loginToken} = this;
+    if (action === 'add') {
+      const response = await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { token: loginToken });
+    } else {
+      const response = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: {token: loginToken } });
+    }
+  }
 }
 
 /**
