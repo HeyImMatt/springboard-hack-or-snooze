@@ -116,9 +116,6 @@ $(async function() {
     $('#submit-form').toggle();
   })
 
-  //Click listener for favoriting
-  $('.star').on('click', {event}, favoriteStory)
-
   /**
    * Event handler for Navigation to Homepage
    */
@@ -163,6 +160,9 @@ $(async function() {
     $loginForm.trigger("reset");
     $createAccountForm.trigger("reset");
 
+    // regenerate stories to add favoriting ability
+    generateStories();
+
     // show the stories
     $allStoriesList.show();
 
@@ -188,6 +188,8 @@ $(async function() {
       const result = generateStoryHTML(story);
       $allStoriesList.append(result);
     }
+    // add click listener for favoriting stories
+    $('.star').on('click', {event}, favoriteStory);
   }
 
   /**
@@ -200,9 +202,9 @@ $(async function() {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
-        <span class="star">
+        ${ currentUser ? `<span class="star">
           <i class="fa-star far"></i>
-        </span>
+        </span>` : '' }
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
