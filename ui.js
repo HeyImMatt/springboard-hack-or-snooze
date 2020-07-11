@@ -57,6 +57,24 @@ $(async function() {
     loginAndSubmitForm();
   });
 
+  //Article submit form action
+  $submitForm.on('submit', async function(evt) {
+    evt.preventDefault();
+
+    let storyData = {
+      author: $('#author').val(),
+      title: $('#title').val(),
+      url: $('#url').val()
+    }
+
+    if (currentUser) {
+      let addedStory = new Story(await storyList.addStory(currentUser, storyData));
+      $allStoriesList.prepend(generateStoryHTML(addedStory));
+      $('#submit-form').toggle();
+    }
+
+  })
+
   /**
    * Log Out Functionality
    */
@@ -78,6 +96,11 @@ $(async function() {
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
   });
+
+  //Event handler for clicking Submit (story) navlink
+  $('#nav-submit').on('click', () => {
+    $('#submit-form').toggle();
+  })
 
   /**
    * Event handler for Navigation to Homepage
