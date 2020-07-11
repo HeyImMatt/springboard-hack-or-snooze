@@ -201,7 +201,7 @@ $(async function() {
     const storyMarkup = $(`
       <li id="${story.storyId}">
         ${ currentUser ? `<span class="star">
-          <i class="fa-star far"></i>
+          <i class="fa-star ${ currentUser.favorites.map(story => story.storyId).includes(story.storyId) ? 'fa' : 'far' }"></i>
         </span>` : '' }
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
