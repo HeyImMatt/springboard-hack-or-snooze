@@ -191,6 +191,7 @@ $(async function() {
     $navLogOut.show();
     $('#nav-user-profile').text(currentUser.username);
     $('#nav-welcome').show();
+    $('.main-nav-links').show();
   }
 
   /* simple function to pull the hostname from a URL */
