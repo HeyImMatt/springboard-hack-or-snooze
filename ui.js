@@ -75,6 +75,20 @@ $(async function() {
 
   })
 
+  //Favorite stories handler
+  async function favoriteStory(evt) {
+    console.dir(evt.target)
+    let storyId = evt.target.parentElement.parentElement.id;
+    if (evt.target.classList.contains('far')) {
+      evt.target.classList.remove('far');
+      evt.target.classList.add('fa');
+    } else {
+      evt.target.classList.remove('fa');
+      evt.target.classList.add('far');
+    }
+    console.log(storyId)
+  }
+
   /**
    * Log Out Functionality
    */
@@ -101,6 +115,9 @@ $(async function() {
   $('#nav-submit').on('click', () => {
     $('#submit-form').toggle();
   })
+
+  //Click listener for favoriting
+  $('.star').on('click', {event}, favoriteStory)
 
   /**
    * Event handler for Navigation to Homepage
@@ -183,6 +200,9 @@ $(async function() {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
+        <span class="star">
+          <i class="fa-star far"></i>
+        </span>
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
         </a>
