@@ -174,12 +174,24 @@ class User {
       const response = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: {token: loginToken } });
     }
   }
+
+  // delete a story
+  async deleteStory(storyId) {
+    const {loginToken} = this;
+    try {
+      const response = await axios.delete(`${BASE_URL}/stories/${storyId}`, { data: {token: loginToken } });
+    }
+    catch(err) {
+      alert('Oops. Something went wrong trying to delete the story. Please try again.');
+      throw new Error(err)
+    }
+  }
+
 }
 
 /**
  * Class to represent a single story.
  */
-
 class Story {
 
   /**

@@ -265,7 +265,10 @@ $(async function () {
     `)
 
     trashIcon.on('click', {event}, () => {
-      console.log(event)
+      if (confirm('Are you sure you want to delete story?')) {
+        currentUser.deleteStory(event.target.parentElement.id);
+        $(event.target.parentElement).remove();
+      }
     })
 
     $('#my-articles > li').prepend(trashIcon)
