@@ -11,6 +11,8 @@ $(async function() {
   const $favoritedArticles = $('#favorited-articles');
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
+  const $navUserProfile = $('#nav-user-profile');
+  const $userProfileInfo = $('#user-profile');
 
   // global storyList variable
   let storyList = null;
@@ -111,6 +113,14 @@ $(async function() {
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
   });
+
+  //Show user profile info
+  $navUserProfile.on('click', () => {
+    $userProfileInfo.toggleClass('container hidden');
+    $('#profile-name').text(`Name: ${currentUser.name}`);
+    $('#profile-username').text(`Username: ${currentUser.username}`);
+    $('#profile-account-date').text(`Account Created: ${formatDate(currentUser.createdAt)}`);
+  })
 
   // Click listener for clicking Submit (story) navlink
   $navSubmit.on('click', () => {
@@ -244,7 +254,8 @@ $(async function() {
       $filteredArticles,
       $ownStories,
       $loginForm,
-      $createAccountForm
+      $createAccountForm,
+      $userProfileInfo
     ];
     elementsArr.forEach($elem => $elem.hide());
   }
@@ -281,3 +292,9 @@ $(async function() {
     }
   }
 });
+
+//Date formatter function
+function formatDate(dateString) {
+  const options = { year: "numeric", month: "long", day: "numeric" }
+  return new Date(dateString).toLocaleDateString(undefined, options)
+}
