@@ -75,21 +75,10 @@ $(async function () {
         await storyList.addStory(currentUser, storyData),
       );
       $allStoriesList.prepend(generateStoryHTML(addedStory));
+      $('.star').on('click', { event }, favoriteStory);
       $('#submit-form').toggle();
     }
   });
-
-  //Favorite stories handler
-  async function favoriteStory(evt) {
-    let storyId = evt.target.parentElement.parentElement.id;
-    if (evt.target.classList.contains('far')) {
-      await currentUser.favoriteStory('add', storyId);
-      evt.target.className = 'fa-star fa';
-    } else {
-      await currentUser.favoriteStory('remove', storyId);
-      evt.target.className = 'fa-star far';
-    }
-  }
 
   /**
    * Log Out Functionality
@@ -145,6 +134,9 @@ $(async function () {
       }
     }
   });
+
+  // add click listener for favoriting stories
+  $('.star').on('click', { event }, favoriteStory);
 
   /**
    * Event handler for Navigation to Homepage
@@ -224,8 +216,6 @@ $(async function () {
       const result = generateStoryHTML(story);
       displayList ? displayList.append(result) : $allStoriesList.append(result);
     }
-    // add click listener for favoriting stories
-    $('.star').on('click', { event }, favoriteStory);
   }
 
   /**
@@ -255,6 +245,18 @@ $(async function () {
 
     return storyMarkup;
   }
+
+    //Favorite stories handler
+    async function favoriteStory(evt) {
+      let storyId = evt.target.parentElement.parentElement.id;
+      if (evt.target.classList.contains('far')) {
+        await currentUser.favoriteStory('add', storyId);
+        evt.target.className = 'fa-star fa';
+      } else {
+        await currentUser.favoriteStory('remove', storyId);
+        evt.target.className = 'fa-star far';
+      }
+    }
 
   function renderDeleteIcons() {
     const trashIcon = $(`
