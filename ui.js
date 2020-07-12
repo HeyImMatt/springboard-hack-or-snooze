@@ -96,7 +96,6 @@ $(async function () {
   /**
    * Log Out Functionality
    */
-
   $navLogOut.on('click', function () {
     // empty out local storage
     localStorage.clear();
@@ -107,7 +106,6 @@ $(async function () {
   /**
    * Event Handler for Clicking Login
    */
-
   $navLogin.on('click', function () {
     // Show the Login and Create Account Forms
     $loginForm.slideToggle();
@@ -164,7 +162,6 @@ $(async function () {
    * On page load, checks local storage to see if the user is already logged in.
    * Renders page information accordingly.
    */
-
   async function checkIfLoggedIn() {
     // let's see if we're logged in
     const token = localStorage.getItem('token');
@@ -184,7 +181,6 @@ $(async function () {
   /**
    * A rendering function to run to reset the forms and hide the login info
    */
-
   function loginAndSubmitForm() {
     // hide the forms for logging in and signing up
     $loginForm.hide();
@@ -208,7 +204,6 @@ $(async function () {
    * A rendering function to call the StoryList.getStories static method,
    *  which will generate a storyListInstance. Then render it.
    */
-
   async function generateStories(displayList) {
     // if the function call comes from the favorites link, generate the list of favorites
     if (displayList === $favoritedArticles) {
@@ -245,18 +240,12 @@ $(async function () {
     // render story markup
     const storyMarkup = $(`
       <li id="${story.storyId}">
-        ${
-          currentUser
-            ? `<span class="star">
-          <i class="fa-star ${
-            currentUser.favorites
-              .map((story) => story.storyId)
-              .includes(story.storyId)
-              ? 'fa'
-              : 'far'
-          }"></i>
-        </span>`
-            : ''
+        ${currentUser ?
+          `<span class="star">
+          <i class="fa-star ${currentUser.favorites.map((story) => story.storyId)
+            .includes(story.storyId) ? 'fa' : 'far'}"></i>
+          </span>`
+          : ''
         }
         <a class="article-link" href="${story.url}" target="a_blank">
           <strong>${story.title}</strong>
