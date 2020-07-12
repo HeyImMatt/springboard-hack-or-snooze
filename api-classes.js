@@ -44,11 +44,14 @@ class StoryList {
    */
 
   async addStory(user, newStory) {
-    // TODO - Implement this functions!
-    // this function should return the newly created story so it can be used in
-    // the ui.js file where it will be appended to the DOM
-    const response = await axios.post(`${BASE_URL}/stories`, { token: user.loginToken, story: {author: newStory.author, title: newStory.title, url: newStory.url} });
-    return response.data.story;
+    try {
+      const response = await axios.post(`${BASE_URL}/stories`, { token: user.loginToken, story: {author: newStory.author, title: newStory.title, url: newStory.url} });
+      return response.data.story;
+    }
+    catch(err) {
+      alert('Oops. Something went wrong adding the story. Please try again.');
+      throw new Error(err);
+    }
   }
 }
 
@@ -168,10 +171,16 @@ class User {
   // add stories on favorites list
   async favoriteStory(action, storyId) {
     const {username, loginToken} = this;
-    if (action === 'add') {
-      const response = await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { token: loginToken });
-    } else {
-      const response = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: {token: loginToken } });
+    try {
+      if (action === 'add') {
+        const response = await axios.post(`${BASE_URL}/users/${username}/favorites/${storyId}`, { token: loginToken });
+      } else {
+        const response = await axios.delete(`${BASE_URL}/users/${username}/favorites/${storyId}`, { data: {token: loginToken } });
+      }
+    }
+    catch(err) {
+      alert('Oops. Something went wrong with favoriting that story. Please try again.')
+      throw new Error(err)
     }
   }
 

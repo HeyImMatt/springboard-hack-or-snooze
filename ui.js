@@ -26,13 +26,12 @@ $(async function () {
    * Event listener for logging in.
    *  If successfully we will setup the user instance
    */
-
   $loginForm.on('submit', async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
 
     // grab the username and password
-    const username = $('#login-username').val();
-    const password = $('#login-password').val();
+    const username = $('#login-username').val().trim();
+    const password = $('#login-password').val().trim();
 
     // call the login static method to build a user instance
     const userInstance = await User.login(username, password);
@@ -46,14 +45,13 @@ $(async function () {
    * Event listener for signing up.
    *  If successfully we will setup a new user instance
    */
-
   $createAccountForm.on('submit', async function (evt) {
     evt.preventDefault(); // no page refresh
 
     // grab the required fields
-    let name = $('#create-account-name').val();
-    let username = $('#create-account-username').val();
-    let password = $('#create-account-password').val();
+    let name = $('#create-account-name').val().trim();
+    let username = $('#create-account-username').val().trim();
+    let password = $('#create-account-password').val().trim();
 
     // call the create method, which calls the API and then builds a new user instance
     const newUser = await User.create(username, password, name);
@@ -67,9 +65,9 @@ $(async function () {
     evt.preventDefault();
 
     let storyData = {
-      author: $('#author').val(),
-      title: $('#title').val(),
-      url: $('#url').val(),
+      author: $('#author').val().trim(),
+      title: $('#title').val().trim(),
+      url: $('#url').val().trim(),
     };
 
     if (currentUser) {
@@ -233,7 +231,6 @@ $(async function () {
   /**
    * A function to render HTML for an individual Story instance
    */
-
   function generateStoryHTML(story) {
     let hostName = getHostName(story.url);
 
@@ -298,7 +295,6 @@ $(async function () {
   }
 
   /* simple function to pull the hostname from a URL */
-
   function getHostName(url) {
     let hostName;
     if (url.indexOf('://') > -1) {
@@ -313,7 +309,6 @@ $(async function () {
   }
 
   /* sync current user information to localStorage */
-
   function syncCurrentUserToLocalStorage() {
     if (currentUser) {
       localStorage.setItem('token', currentUser.loginToken);
