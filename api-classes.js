@@ -81,21 +81,26 @@ class User {
    */
 
   static async create(username, password, name) {
-    const response = await axios.post(`${BASE_URL}/signup`, {
-      user: {
-        username,
-        password,
-        name
-      }
-    });
-
-    // build a new User instance from the API response
-    const newUser = new User(response.data.user);
-
-    // attach the token to the newUser instance for convenience
-    newUser.loginToken = response.data.token;
-
-    return newUser;
+    try {
+      const response = await axios.post(`${BASE_URL}/signup`, {
+        user: {
+          username,
+          password,
+          name
+        }
+      });     
+      // build a new User instance from the API response
+      const newUser = new User(response.data.user);
+  
+      // attach the token to the newUser instance for convenience
+      newUser.loginToken = response.data.token;
+  
+      return newUser;
+    }
+    catch(err) {
+      alert('Could not create new user');
+      throw new Error(err)
+    }
   }
 
   /* Login in user and return user instance.
@@ -105,24 +110,30 @@ class User {
    */
 
   static async login(username, password) {
-    const response = await axios.post(`${BASE_URL}/login`, {
-      user: {
-        username,
-        password
-      }
-    });
-
-    // build a new User instance from the API response
-    const existingUser = new User(response.data.user);
-
-    // instantiate Story instances for the user's favorites and ownStories
-    existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
-    existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
-
-    // attach the token to the newUser instance for convenience
-    existingUser.loginToken = response.data.token;
-
-    return existingUser;
+    try {
+      const response = await axios.post(`${BASE_URL}/login`, {
+        user: {
+          username,
+          password
+        }
+      });
+  
+      // build a new User instance from the API response
+      const existingUser = new User(response.data.user);
+  
+      // instantiate Story instances for the user's favorites and ownStories
+      existingUser.favorites = response.data.user.favorites.map(s => new Story(s));
+      existingUser.ownStories = response.data.user.stories.map(s => new Story(s));
+  
+      // attach the token to the newUser instance for convenience
+      existingUser.loginToken = response.data.token;
+  
+      return existingUser;
+    }
+    catch(err) {
+      alert('Login failed. Check username and password, or sign up for a new account');
+      throw new Error(err);
+    }
   }
 
   /** Get user instance for the logged-in-user.

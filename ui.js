@@ -2,10 +2,13 @@ $(async function() {
   // cache some selectors we'll be using quite a bit
   const $allStoriesList = $("#all-articles-list");
   const $submitForm = $("#submit-form");
+  const $navSubmit = $('#nav-submit');
   const $filteredArticles = $("#filtered-articles");
   const $loginForm = $("#login-form");
   const $createAccountForm = $("#create-account-form");
   const $ownStories = $("#my-articles");
+  const $navFavorites = $('#nav-favorites');
+  const $favoritedArticles = $('#favorited-articles');
   const $navLogin = $("#nav-login");
   const $navLogOut = $("#nav-logout");
 
@@ -79,10 +82,10 @@ $(async function() {
   async function favoriteStory(evt) {
     let storyId = evt.target.parentElement.parentElement.id;
     if (evt.target.classList.contains('far')) {
-      currentUser.favoriteStory('add', storyId);
+      await currentUser.favoriteStory('add', storyId);
       evt.target.className = 'fa-star fa';
     } else {
-      currentUser.favoriteStory('remove', storyId);
+      await currentUser.favoriteStory('remove', storyId);
       evt.target.className = 'fa-star far';
     }
   }
@@ -109,9 +112,17 @@ $(async function() {
     $allStoriesList.toggle();
   });
 
-  //Event handler for clicking Submit (story) navlink
-  $('#nav-submit').on('click', () => {
-    $('#submit-form').toggle();
+  // Click listener for clicking Submit (story) navlink
+  $navSubmit.on('click', () => {
+    $submitForm.toggle();
+  })
+
+  // Click listener for favorites link in nav
+  $navFavorites.on('click', async function() {
+    hideElements();
+    await checkIfLoggedIn();
+    generateStories($favoritedArticles);
+    $favoritedArticles.show();
   })
 
   /**
@@ -120,6 +131,7 @@ $(async function() {
 
   $("body").on("click", "#nav-all", async function() {
     hideElements();
+    await checkIfLoggedIn();
     await generateStories();
     $allStoriesList.show();
   });
@@ -173,18 +185,25 @@ $(async function() {
    *  which will generate a storyListInstance. Then render it.
    */
 
-  async function generateStories() {
-    // get an instance of StoryList
-    const storyListInstance = await StoryList.getStories();
-    // update our global variable
-    storyList = storyListInstance;
-    // empty out that part of the page
-    $allStoriesList.empty();
+  async function generateStories(displayList) {
+    // if the function call comes from the favorites link, generate the list of favorites
+    if (displayList === $favoritedArticles) {
+      storyList.stories = currentUser.favorites;
+      displayList.empty();
+    } else {
+      // get an instance of StoryList
+      const storyListInstance = await StoryList.getStories();
+      // update our global variable
+      storyList = storyListInstance;
+      // empty out that part of the page
+      $allStoriesList.empty();
+    }
+
 
     // loop through all of our stories and generate HTML for them
     for (let story of storyList.stories) {
       const result = generateStoryHTML(story);
-      $allStoriesList.append(result);
+      displayList ? displayList.append(result) : $allStoriesList.append(result);
     }
     // add click listener for favoriting stories
     $('.star').on('click', {event}, favoriteStory);
@@ -221,6 +240,7 @@ $(async function() {
     const elementsArr = [
       $submitForm,
       $allStoriesList,
+      $favoritedArticles,
       $filteredArticles,
       $ownStories,
       $loginForm,
