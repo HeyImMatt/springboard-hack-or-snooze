@@ -76,7 +76,11 @@ $(async function () {
       );
       $allStoriesList.prepend(generateStoryHTML(addedStory));
       $('.star').on('click', { event }, favoriteStory);
+      $('#author').val('');
+      $('#title').val('');
+      $('#url').val('');
       $('#submit-form').toggle();
+      $('#nav-all').trigger('click');
     }
   });
 
@@ -134,9 +138,6 @@ $(async function () {
       }
     }
   });
-
-  // add click listener for favoriting stories
-  $('.star').on('click', { event }, favoriteStory);
 
   /**
    * Event handler for Navigation to Homepage
@@ -216,6 +217,7 @@ $(async function () {
       const result = generateStoryHTML(story);
       displayList ? displayList.append(result) : $allStoriesList.append(result);
     }
+    $('.star').on('click', { event }, favoriteStory);
   }
 
   /**
