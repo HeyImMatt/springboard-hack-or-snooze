@@ -98,7 +98,7 @@ class User {
       return newUser;
     }
     catch(err) {
-      alert('Could not create new user');
+      alert('Username already exists. Please try another.');
       throw new Error(err)
     }
   }
