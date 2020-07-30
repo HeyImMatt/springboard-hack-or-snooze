@@ -124,7 +124,9 @@ $(async function () {
   });
 
   // Click listener for favorites and my stories links in nav
-  $navBar.on('click', { event }, async function () {
+  $navBar.on('click', showFavoritesOrMyStories);
+
+  async function showFavoritesOrMyStories() {
     let clickId = event.target.id;
 
     if (clickId === 'nav-favorites' || clickId === 'nav-my-stories') {
@@ -141,7 +143,7 @@ $(async function () {
         $ownStories.show();
       }
     }
-  });
+  }
 
   /**
    * Event handler for Navigation to Homepage
