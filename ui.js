@@ -124,6 +124,17 @@ $(async function () {
     $allStoriesList.show();
   }
 
+  async function favoriteStory(evt) {
+    let storyId = evt.target.parentElement.parentElement.id;
+    if (evt.target.classList.contains('far')) {
+      await currentUser.favoriteStory('add', storyId);
+      evt.target.className = 'fa-star fa';
+    } else {
+      await currentUser.favoriteStory('remove', storyId);
+      evt.target.className = 'fa-star far';
+    }
+  }
+
   /**
    * On page load, checks local storage to see if the user is already logged in.
    * Renders page information accordingly.
@@ -166,18 +177,6 @@ $(async function () {
     showNavForLoggedInUser();
   }
 
-  //Favorite stories handler
-  async function favoriteStory(evt) {
-    let storyId = evt.target.parentElement.parentElement.id;
-    if (evt.target.classList.contains('far')) {
-      await currentUser.favoriteStory('add', storyId);
-      evt.target.className = 'fa-star fa';
-    } else {
-      await currentUser.favoriteStory('remove', storyId);
-      evt.target.className = 'fa-star far';
-    }
-  }
-
 
   // Rendering functions // 
 
@@ -207,7 +206,7 @@ $(async function () {
       const result = generateStoryHTML(story);
       displayList ? displayList.append(result) : $allStoriesList.append(result);
     }
-    $('.star').on('click', { event }, favoriteStory);
+    $('.star').on('click', favoriteStory);
   }
 
   /**
@@ -287,7 +286,6 @@ $(async function () {
     );
   }
 
-  // Show the Login and Create Account Forms
   function toggleLoginCreateAccountForm() {
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
