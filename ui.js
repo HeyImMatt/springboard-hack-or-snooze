@@ -97,12 +97,14 @@ $(async function () {
   /**
    * Event Handler for Clicking Login
    */
-  $navLogin.on('click', function () {
-    // Show the Login and Create Account Forms
+  $navLogin.on('click', toggleLoginForm);
+
+  // Show the Login and Create Account Forms
+  function toggleLoginForm() {
     $loginForm.slideToggle();
     $createAccountForm.slideToggle();
     $allStoriesList.toggle();
-  });
+  }
 
   //Show user profile info
   $navUserProfile.on('click', () => {
