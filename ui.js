@@ -148,12 +148,14 @@ $(async function () {
   /**
    * Event handler for Navigation to Homepage
    */
-  $('body').on('click', '#nav-all', async function () {
+  $('#nav-all').on('click', showMainPage);
+
+  async function showMainPage() {
     hideElements();
     await checkIfLoggedIn();
     await generateStories();
     $allStoriesList.show();
-  });
+  }
 
   /**
    * On page load, checks local storage to see if the user is already logged in.
