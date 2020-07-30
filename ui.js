@@ -13,6 +13,7 @@ $(async function () {
   const $navUserProfile = $('#nav-user-profile');
   const $userProfileInfo = $('#user-profile');
   const $navBar = $('.main-nav-links');
+  const $navAll = $('#nav-all');
 
   // global storyList variable
   let storyList = null;
@@ -20,11 +21,21 @@ $(async function () {
   // global currentUser variable
   let currentUser = null;
 
+  //Click Listeners
+  $navLogin.on('click', toggleLoginForm);
+  $navLogOut.on('click', dumpStorageAndReload);
+  $navAll.on('click', showMainPage);
+  $navBar.on('click', showFavoritesOrMyStories);
+  $navUserProfile.on('click', showUserProfileInfo);
+  $navSubmit.on('click', () => {
+    $submitForm.toggle();
+  });
+
   await checkIfLoggedIn();
 
   /**
    * Event listener for logging in.
-   *  If successfully we will setup the user instance
+   *  If successful we will setup the user instance
    */
   $loginForm.on('submit', async function (evt) {
     evt.preventDefault(); // no page-refresh on submit
@@ -84,48 +95,6 @@ $(async function () {
     }
   });
 
-  /**
-   * Log Out Functionality
-   */
-  $navLogOut.on('click', dumpStorageAndReload);
-
-  function dumpStorageAndReload() {
-    localStorage.clear();
-    location.reload();
-  }
-
-  /**
-   * Event Handler for Clicking Login
-   */
-  $navLogin.on('click', toggleLoginForm);
-
-  // Show the Login and Create Account Forms
-  function toggleLoginForm() {
-    $loginForm.slideToggle();
-    $createAccountForm.slideToggle();
-    $allStoriesList.toggle();
-  }
-
-  //Show user profile info
-  $navUserProfile.on('click', showUserProfileInfo);
-
-  function showUserProfileInfo() {
-    $userProfileInfo.toggleClass('container hidden');
-    $('#profile-name').text(`Name: ${currentUser.name}`);
-    $('#profile-username').text(`Username: ${currentUser.username}`);
-    $('#profile-account-date').text(
-      `Account Created: ${formatDate(currentUser.createdAt)}`,
-    );
-  }
-
-  // Click listener for clicking Submit (story) navlink
-  $navSubmit.on('click', () => {
-    $submitForm.toggle();
-  });
-
-  // Click listener for favorites and my stories links in nav
-  $navBar.on('click', showFavoritesOrMyStories);
-
   async function showFavoritesOrMyStories() {
     let clickId = event.target.id;
 
@@ -144,11 +113,6 @@ $(async function () {
       }
     }
   }
-
-  /**
-   * Event handler for Navigation to Homepage
-   */
-  $('#nav-all').on('click', showMainPage);
 
   async function showMainPage() {
     hideElements();
@@ -256,17 +220,17 @@ $(async function () {
     return storyMarkup;
   }
 
-    //Favorite stories handler
-    async function favoriteStory(evt) {
-      let storyId = evt.target.parentElement.parentElement.id;
-      if (evt.target.classList.contains('far')) {
-        await currentUser.favoriteStory('add', storyId);
-        evt.target.className = 'fa-star fa';
-      } else {
-        await currentUser.favoriteStory('remove', storyId);
-        evt.target.className = 'fa-star far';
-      }
+  //Favorite stories handler
+  async function favoriteStory(evt) {
+    let storyId = evt.target.parentElement.parentElement.id;
+    if (evt.target.classList.contains('far')) {
+      await currentUser.favoriteStory('add', storyId);
+      evt.target.className = 'fa-star fa';
+    } else {
+      await currentUser.favoriteStory('remove', storyId);
+      evt.target.className = 'fa-star far';
     }
+  }
 
   function renderDeleteIcons() {
     const trashIcon = $(`
@@ -306,6 +270,15 @@ $(async function () {
     $('.main-nav-links').show();
   }
 
+  function showUserProfileInfo() {
+    $userProfileInfo.toggleClass('container hidden');
+    $('#profile-name').text(`Name: ${currentUser.name}`);
+    $('#profile-username').text(`Username: ${currentUser.username}`);
+    $('#profile-account-date').text(
+      `Account Created: ${formatDate(currentUser.createdAt)}`,
+    );
+  }
+
   /* simple function to pull the hostname from a URL */
   function getHostName(url) {
     let hostName;
@@ -328,6 +301,18 @@ $(async function () {
     }
   }
 });
+
+// Show the Login and Create Account Forms
+function toggleLoginForm() {
+  $loginForm.slideToggle();
+  $createAccountForm.slideToggle();
+  $allStoriesList.toggle();
+}
+
+function dumpStorageAndReload() {
+  localStorage.clear();
+  location.reload();
+}
 
 //Date formatter function
 function formatDate(dateString) {
