@@ -87,12 +87,12 @@ $(async function () {
   /**
    * Log Out Functionality
    */
-  $navLogOut.on('click', function () {
-    // empty out local storage
+  $navLogOut.on('click', dumpStorageAndReload);
+
+  function dumpStorageAndReload() {
     localStorage.clear();
-    // refresh the page, clearing memory
     location.reload();
-  });
+  }
 
   /**
    * Event Handler for Clicking Login
