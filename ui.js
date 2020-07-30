@@ -107,14 +107,16 @@ $(async function () {
   }
 
   //Show user profile info
-  $navUserProfile.on('click', () => {
+  $navUserProfile.on('click', showUserProfileInfo);
+
+  function showUserProfileInfo() {
     $userProfileInfo.toggleClass('container hidden');
     $('#profile-name').text(`Name: ${currentUser.name}`);
     $('#profile-username').text(`Username: ${currentUser.username}`);
     $('#profile-account-date').text(
       `Account Created: ${formatDate(currentUser.createdAt)}`,
     );
-  });
+  }
 
   // Click listener for clicking Submit (story) navlink
   $navSubmit.on('click', () => {
