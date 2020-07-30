@@ -21,9 +21,10 @@ $(async function () {
   // global currentUser variable
   let currentUser = null;
 
-  //Click Listeners
-  $navLogin.on('click', toggleLoginForm);
-  $navLogOut.on('click', dumpStorageAndReload);
+  // Click Listeners //
+
+  $navLogin.on('click', toggleLoginCreateAccountForm);
+  $navLogOut.on('click', dumpStorageAndReloadPage);
   $navAll.on('click', showMainPage);
   $navBar.on('click', showFavoritesOrMyStories);
   $navUserProfile.on('click', showUserProfileInfo);
@@ -33,6 +34,8 @@ $(async function () {
 
   await checkIfLoggedIn();
 
+  // Form Submit Handlers //
+  
   /**
    * Event listener for logging in.
    *  If successful we will setup the user instance
@@ -163,6 +166,21 @@ $(async function () {
     showNavForLoggedInUser();
   }
 
+  //Favorite stories handler
+  async function favoriteStory(evt) {
+    let storyId = evt.target.parentElement.parentElement.id;
+    if (evt.target.classList.contains('far')) {
+      await currentUser.favoriteStory('add', storyId);
+      evt.target.className = 'fa-star fa';
+    } else {
+      await currentUser.favoriteStory('remove', storyId);
+      evt.target.className = 'fa-star far';
+    }
+  }
+
+
+  // Rendering functions // 
+
   /**
    * A rendering function to call the StoryList.getStories static method,
    *  which will generate a storyListInstance. Then render it.
@@ -220,18 +238,6 @@ $(async function () {
     return storyMarkup;
   }
 
-  //Favorite stories handler
-  async function favoriteStory(evt) {
-    let storyId = evt.target.parentElement.parentElement.id;
-    if (evt.target.classList.contains('far')) {
-      await currentUser.favoriteStory('add', storyId);
-      evt.target.className = 'fa-star fa';
-    } else {
-      await currentUser.favoriteStory('remove', storyId);
-      evt.target.className = 'fa-star far';
-    }
-  }
-
   function renderDeleteIcons() {
     const trashIcon = $(`
       <i class="fas fa-trash-alt"></i>
@@ -246,6 +252,8 @@ $(async function () {
 
     $('#my-articles > li').prepend(trashIcon)
   }
+
+  //UI Helper Functions //
 
   /* hide all elements in elementsArr */
   function hideElements() {
@@ -279,7 +287,16 @@ $(async function () {
     );
   }
 
-  /* simple function to pull the hostname from a URL */
+  // Show the Login and Create Account Forms
+  function toggleLoginCreateAccountForm() {
+    $loginForm.slideToggle();
+    $createAccountForm.slideToggle();
+    $allStoriesList.toggle();
+  }
+
+
+  // Utility Helper Functions //
+
   function getHostName(url) {
     let hostName;
     if (url.indexOf('://') > -1) {
@@ -293,29 +310,21 @@ $(async function () {
     return hostName;
   }
 
-  /* sync current user information to localStorage */
   function syncCurrentUserToLocalStorage() {
     if (currentUser) {
       localStorage.setItem('token', currentUser.loginToken);
       localStorage.setItem('username', currentUser.username);
     }
   }
+  
+  function dumpStorageAndReloadPage() {
+    localStorage.clear();
+    location.reload();
+  }
+  
+  function formatDate(dateString) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  }
+  
 });
-
-// Show the Login and Create Account Forms
-function toggleLoginForm() {
-  $loginForm.slideToggle();
-  $createAccountForm.slideToggle();
-  $allStoriesList.toggle();
-}
-
-function dumpStorageAndReload() {
-  localStorage.clear();
-  location.reload();
-}
-
-//Date formatter function
-function formatDate(dateString) {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  return new Date(dateString).toLocaleDateString(undefined, options);
-}
